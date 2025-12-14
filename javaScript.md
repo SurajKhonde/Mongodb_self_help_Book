@@ -525,3 +525,147 @@ let user = {
 };
 user.sayHi(); // John
 ```
+#### What are classes?
+JavaScript still follows a `prototype-based inheritance model`. Classes in JavaScript are **syntactic sugar** over the prototype-based inheritance model which we use to implement OOP concepts.
+```ts
+function Pen(name, color, price) {
+    this.name = name;
+    this.color = color;
+    this.price = price;
+}
+const pen1 = new Pen("Marker", "Blue", "$3");
+console.log(pen1);
+Pen.prototype.showPrice = function(){
+    console.log(`Price of ${this.name} is ${this.price}`);
+}
+
+pen1.showPrice();
+```
+**Classes**
+```ts
+class Chair {
+    constructor(color, seatHeight, recliningAngle, backSupport, headSupport, padding, armRests, seatSize, isHeightAdjustable, isMovable){
+        this.color = color;
+        this.seatHeight = seatHeight;
+        this.recliningAngle = recliningAngle;
+        this.backSupport = backSupport;
+        this.headSupport = headSupport;
+        this.padding = padding;
+        this.armRests = armRests;
+        this.seatSize = seatSize;
+        this.isHeightAdjustable = isHeightAdjustable;
+        this.isMovable = isMovable;
+    }
+
+    adjustableHeight() {};
+    adjustAngle(){};
+    moveChair(){};    
+}
+
+const newChair = new Chair("Blue","25 inch","20 deg",true,false,"3 inch",true,"16 inch",false,false);
+
+console.dir("Chair Prototype", Chair);
+console.log("Chair Object", newChair);
+```
+**The chair class has the following members:**
+
+**Attributes**: These will define the attributes of the chair such as color, seat height, backSupport, and so on.
+**Functions**: These define the behavior of the chair. For example, if the chair has isHeightAdjustable set to true then it can use the function `adjustableHeight`. You can see that all the functions are declared in the `Chair` class. These are the abstract functions. We will talk more about these functions later in this article.
+![alt text](image.png)
+```ts
+class OfficeChair extends Chair{
+    constructor(color, isHeightAdjustable, seatHeight, recliningAngle){
+        super();
+        this.type = "Office Chair";
+        this.color = color;
+        this.isHeightAdjustable = isHeightAdjustable;
+        this.seatHeight = seatHeight;
+        this.recliningAngle = recliningAngle;
+        this.isMovable = true;
+    }
+
+    adjustableHeight(height){
+        if(height > this.seatHeight){
+            console.log(`Chair height changed to ${height}`);        
+        } else {
+            console.log(`Height cannot be decreased more than the seat height ${this.seatHeight}`);
+        }
+    }
+
+    adjustAngle(angle){
+        if(angle >= this.recliningAngle){
+            console.log(`Chair angle changed to ${angle}`);        
+        } else {
+            console.log(`Angle cannot be decreased more than the min reclining angle ${this.recliningAngle}`);
+        }
+    }
+
+    moveChair(x,y){
+        console.log(`Chair moved to co-ordinates = (${x}, ${y})`);
+    }
+}
+
+const newOfficeChair = new OfficeChair("Red", true, 30, 30);
+
+console.log(newOfficeChair.adjustableHeight(31));
+console.log(newOfficeChair.adjustAngle(40));
+console.log(newOfficeChair.moveChair(10,20));
+```
+This is a class that inherits the functions and attributes from the superclass `chair`. It uses the `extends` keyword to allow the `OfficeChair` class to perform inheritance.
+
+**The `extends` keyword has the following syntax:**
+`class ChildClass extends ParentClass{...}`
+- We use the `super` keyword to call the constructor of the parent class. We can also use it to call functions and properties of the parent class.
+
+- Make sure you call the `super` function at the start of the constructor. If you don't, and you try to access the parent class's properties before you use `super` in the child class constructor, it will throw an error.
+- Once the `super` function is called, then you can access all the attributes and functions of the parent class.
+#### Static Keyword in Javascript
+The `static` keyword in JavaScript helps you define functions and properties in the class that cannot be called by the instance of the object. They can only be called by the class itself which consists of these static functions and properties.
+###### The advantage of using static functions or properties in a class is that:
+- They can be used to create functions/properties which need not be present in the instances. This helps to maintain some isolation in the codebase.
+- They reduce code redundancy in some cases.
+  
+ `static` in a JS/TS class means: the property or method belongs to the class itself, not to each object (instance). 
+ **1) Without static (instance method)**
+ ```ts
+ class User {
+  constructor(name) {
+    this.name = name;
+  }
+
+  sayHi() {
+    return `Hi ${this.name}`;
+  }
+}
+
+const u = new User("Suraj");
+u.sayHi();      // ✅ works
+// User.sayHi(); // ❌ error (not on class)
+
+ ```
+ **2) With static (class method)**
+ ```ts
+class MathUtils {
+  static add(a, b) {
+    return a + b;
+  }
+}
+
+MathUtils.add(2, 3); // ✅ 5
+// new MathUtils().add(2,3) // ❌ error
+
+ ```
+ **Factory methods (create objects in a controlled way)**
+ ```ts
+class User {
+  constructor(name, role) {
+    this.name = name;
+    this.role = role;
+  }
+  static admin(name) {
+    return new User(name, "admin");
+  }
+}
+const a = User.admin("Suraj"); // ✅ creates User
+
+ ```

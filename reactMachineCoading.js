@@ -62,11 +62,6 @@ export default App;
 // Filter tasks → All, Active, Completed
 // Persist tasks in localStorage
 
-import React, { useState } from "react";
-
-exports const Apps=()=>{
- const [task,set]  
-}
  
 
   
